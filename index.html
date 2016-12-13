@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en" ng-app="hmkApp">
+  <head>
+      <meta charset="utf-8">
+      <title>HMK CM Offline Tool</title>
+      <link rel="stylesheet" href="css/lib/bootstrap/bootstrap.css">
+      <link rel="stylesheet" href="css/app.css">
+
+      <script src="node_modules/angular/angular.min.js"></script>
+      <script src="node_modules/angular-route/angular-route.min.js"></script>
+
+  </head>
+  <body style="padding:20px; width: 100%; min-height: 100%;">
+      <!-- HEADER GOES HERE -->
+      <div ng-view style="margin-top:50px;">
+      </div>
+      <!-- FOOTER GOES HERE -->
+      
+      <script src="client_modules/app.js"></script>
+      
+      <script src="client_modules/common_module/indexedDBOperations.js"></script>
+
+      <script src="client_modules/survey_part1_module/controller.js"></script>
+      <script src="client_modules/survey_part2_module/controller.js"></script>
+
+      <script src="client_modules/app-route.js"></script>
+
+  </body>
+</html>

@@ -4,6 +4,10 @@
 hmkApp.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
+	  when('/', {
+        templateUrl: 'client_modules/home_Page_module/template.html',
+        controller: 'homePageController'
+      }).
       when('/surveyPart1', {
         templateUrl: 'client_modules/survey_part1_module/template.html',
         controller: 'surveyController1'

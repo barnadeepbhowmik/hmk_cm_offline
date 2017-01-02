@@ -1,1 +1,23 @@
-{{displayText}}
+<div class="questionContainer">    
+	<p class="header">
+		Survey 1 Question
+	</p>
+    
+    <hr>
+	
+	<div class="question" ng-repeat="questions in questionsList" >
+		<div class="mainQue" id="{{questions.questionId}}">
+			<p ng-bind="questions.question"></p>
+			<div class="styled" ng-if="questions.answerType=='Picklist'">
+				<select ng-model="itemSelected" ng-change="setAnswerToIDB($index,itemSelected,questions)">	
+					<option ng-repeat="answerOpt in questions.answerOption.split(',')" value="{{answerOpt.trim()}}" >
+                                {{answerOpt.trim()}}
+                    </option>					
+				</select>
+		    </div>
+			<div class="styled" ng-if="questions.answerType=='Text'" >
+				<input class="fullTextBox" type="text" ng-model="textEntered" ng-blur="setAnswerToIDB($index,textEntered,questions)">
+			</div>
+	   </div>
+    </div>
+</div>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <answers>
+    <answer>
+    <answerId_c>a2cG0000000YK0aIAG</answerId_c>
+    <parentAns_c>Yes</parentAns_c>
+    <questionId_c>a2cG0000000YK0xIAG</questionId_c>
+    <userId_c>TestUser</userId_c>
+    <answerText_c>Which city have you done full body checkup?</answerText_c>
+    <answerOptions_c>Pune, Banglore, Mumbai</answerOptions_c>
+    <answer_Type_c>Picklist</answer_Type_c>
+    </answer>
+    <answer>
+    <answerId_c>a2cG0000000YK0bIAG</answerId_c>
+    <parentAns_c>No</parentAns_c>
+    <questionId_c>a2cG0000000YK0xIAG</questionId_c>
+    <userId_c>TestUser</userId_c>
+    <answerText_c>What is the reason for not doing full body checkup?</answerText_c>
+    <answerOptions_c>busy, will be doing in next 1 month, did not find the right doctor</answerOptions_c>
+    <answer_Type_c>Picklist</answer_Type_c>
+    </answer>
+    </answers>

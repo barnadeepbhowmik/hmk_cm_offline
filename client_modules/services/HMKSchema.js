@@ -13,7 +13,7 @@ angular.module('hmk-schema',["hmk-constants"]).service('hmkschema', function (co
                 keyPath: dbObj.questions.keyPath,
                 indexes: [
                     {
-                        keyPath: dbObj.questions.indexes.parentQId,
+                        keyPath: dbObj.questions.indexes.isFollowUpQue,
                         unique: false
                     }
                 ],
@@ -24,15 +24,18 @@ angular.module('hmk-schema',["hmk-constants"]).service('hmkschema', function (co
                 keyPath: dbObj.answers.keyPath,
                 indexes: [
                     {
-                        keyPath: dbObj.answers.indexes.questionId,
+                        keyPath: dbObj.answers.indexes.que_Id,
                         unique: false
-                    },
-					{
-                        keyPath: dbObj.answers.indexes.answerText,
-                        unique: false
-                    },
-					{
-                        keyPath: dbObj.answers.indexes.userId,
+                    }
+                ],
+                dispatchEvents: true
+            },
+            {
+                name: dbObj.statusMatrix.name,
+                keyPath: dbObj.statusMatrix.keyPath,
+                indexes: [
+                    {
+                        keyPath: dbObj.statusMatrix.indexes.followUp_qid,
                         unique: false
                     }
                 ],

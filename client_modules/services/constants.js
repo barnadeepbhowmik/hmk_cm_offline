@@ -1,4 +1,3 @@
-
 /*
     author:a.suresh.nandankar
     date: 12/16/16
@@ -11,45 +10,51 @@ angular.module('hmk-constants',[]).constant('constants', {
         questions: {
             name: 'questions',
             keyPath: 'questionId',
-            indexes: { 
-				//questionId: "questionId",		
+            indexes: {					
                 question: 'question',           
                 answerType: 'answerType',
                 answerOptions: 'answerOption',
-				parentQId : "parentqId",
-                givenAnswer: ""
+				isFollowUpQue: 'isFollowUpQue'
 			}
         },
 		answers :{
 			name: 'answers',
-            keyPath: 'answerId',
+            keyPath: 'user_id',
             indexes: { 					
-                parentAns :"parentAns",
-                questionId: 'questionId',           
-                userId: 'userId',
-                answerText: 'answerText',  
-                answerOptions : 'answerOptions',
-                answer_Type : 'answer_Type'
+                que_Id : 'que_Id',
+                user_id: 'user_id',           
+                ans_txt: 'ans_txt'               
+			}
+		},
+		statusMatrix:{
+			name: 'statusMatrix',
+            keyPath: 'followUp_qid',
+            indexes: { 					
+                que_Id : 'que_Id',
+                answer_text: 'answer_text',           
+                followUp_qid: 'followUp_qid'               
 			}
 		}
     },
     objectMap:{     
         questions: {          
-            "questionId": "questionId_c",
-            "question": "question_c",
-            "answerType": "answerType_c",        
-            "answerOption": "answerOptions_c",
-			"parentQId" : "parentqId_c",
-            "givenAnswer": "givenAnswer_c"
+            "questionId": 'questionId_c',
+            "question": 'question_c',
+            "answerType": 'answerType_c',        
+            "answerOption": 'answerOptions_c',
+			"isFollowUpQue" : 'isFollowUpQue_c'
         },
 		answers: {          
-            "answerId": "answerId_c",
-            "parentAns":"parentAns_c",
-            "questionId": "questionId_c",
-            "userId": "userId_c",        
-            "answerText": "answerText_c",
-            "answerOptions" : "answerOptions_c",
-            "answer_Type" : "answer_Type_c"
-        }      		
+            "que_Id": 'que_Id',
+            "user_id":'user_id',
+            "ans_txt": 'ans_txt'
+        },
+      	statusMatrix:{
+			 "que_Id" : 'que_Id',
+             "answer_text": 'answer_text',       
+             "followUp_qid": 'followUp_qid'
+		}
     }
 });
+
+

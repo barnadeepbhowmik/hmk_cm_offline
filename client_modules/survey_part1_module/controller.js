@@ -7,40 +7,53 @@ hmkApp.controller('surveyController1', ['ydbDatabase','constants', '$scope','$ht
     $scope.displayText = "This is Survey 1";    
     $scope.questionsList = new Array(0);
     $scope.answersList = new Array(0);
-    $scope.qMap = constants.objectMap.questions;	
+    var qMap = constants.objectMap.questions;
+    var aMap = constants.objectMap.answers;
+    
+    var allQuestions = new Array(0);
+    var statusMatrix = new Array(0);
 
     var dataTOUpldate = new Array();
     var mainQueID = "";
 
-    $scope.aMap = constants.objectMap.answers;
-    var url = "/client_modules/dataXml/answers.xml";
-    var JSONAnsData = '';
+    var statusMatrixMap = constants.objectMap.statusMatrix;
+    var url = "/client_modules/assets/dataXml/StatusMatrix.xml";
+    var JSONStatusMtrxData = '';
 
     // Read XML data
     $http({
       method: 'GET',
       url: url
-    }).then(function successCallback(response) {
-         // this callback will be called asynchronously
-         // when the response is available
-         // log("response:" + JSON.stringify(response.data));
-         
+    }).then(function successCallback(response) {       
          // Convert Xml to JSON Data
-         var ansXml = response.data;
+         var sxml = response.data;
          var x2js = new X2JS();
-         JSONAnsData = x2js.xml_str2json(ansXml);        
-         log("JSONANSDATA:::" + JSON.stringify(JSONAnsData));        
-      }, function errorCallback(response) {
-        // called asynchronously if an error occurs
-        // or server returns response with an error status.
-        console.log("error");
-        console.log(response);
+         JSONStatusMtrxData = x2js.xml_str2json(sxml);                 
+         // insert statux matrix object to Index DB 
+        ydbDatabase.insertBulkData(JSONStatusMtrxData.statusMatrix.matrix, "statusMatrix", statusMatrixMap, function (response) { 
+                log("insertBulkData success - > statusMatrix")
+                ydbDatabase.getAllRecords("statusMatrix",false, function (records) {        
+                    statusMatrix = records;
+                },
+                function (error) {
+                    log("error");
+                    log(error);
+                });
+            },
+            function (error) {
+                log("error");
+                log(error);
+            });
+      }, function errorCallback(response) {       
+            log("error");
+            log(response);
       });  
-    
+     
+   
 
     // READ OPERATION
     ydbDatabase.getTotalRecordCount("questions",function (records) {        
-        log("getTotalRecordCount callback...");
+        log("getTotalRecordCount success - > questions");
         log(records);
     },
     function (error) {
@@ -49,105 +62,71 @@ hmkApp.controller('surveyController1', ['ydbDatabase','constants', '$scope','$ht
     });
 
     ydbDatabase.getAllRecords("questions",false, function (records) {        
-        log("getAllRecords callback...question object");
+        log("getAllRecords success - > questions");
         log(records);
-        $scope.questionsList = records;
+        allQuestions = records;
+        var mainQues = new Array(0);
+        
+        angular.forEach(records, function(record, i) {
+            if(record.isFollowUpQue == "false"){
+                mainQues.push(record);
+            }
+        });
+        
+        $scope.questionsList = mainQues;
         $scope.$apply();         
     },
     function (error) {
         log("error");
         log(error);
     });
-    
-    
+  
     // SET answered text to index DB and Render follow up question if any 
     $scope.setAnswerToIDB = function(index, answer, givenAnswerObject){  
 
         // Read question id from the curently answer question to search for child question. 
-        var mainQueId = givenAnswerObject.questionId;
-        log("MainQueID::"+mainQueId);        
-        log("INDEX:"+index)
-        mainQueID = mainQueId
-
-        // insert answer object to Index DB - for testing purpose now ** Need to change as sync later.
-        ydbDatabase.insertBulkData(JSONAnsData.answers.answer, "answers",$scope.aMap);
-
-        // save the currently answered question answer in question object store
-        ydbDatabase.saveObjectToDBStore("questions", answer, givenAnswerObject, index, function (records) {        
-            log("saveObjectToDBStore callback...");                       
-            $scope.$apply(); 
-
-            // check for follow up question if yes render follow up question.
-            // get the answer object
-
-            ydbDatabase.getAllRecords("answers",false, function (records) {        
-                log("getAllRecords callback: answer object");
-                log(records);
-                $scope.answersList = records;
-                $scope.$apply();                
-
-                dataTOUpldate = $scope.questionsList;
-
-                // Remove follow up queston if any for current questionID                
-                removeFollowUpQuestion();
-
-                // Find follow up question       
-                var occuranceFlag = true;
-                angular.forEach($scope.answersList, function(value, key) {                 
-                    var parentId = value.questionId;
-                    var parentAns = value.parentAns;
-
-                    var obj = {};
-
-                    // if follow up question found : create the question object from the answer object
-                    if(parentId === mainQueId && parentAns === answer){                       
-                        occuranceFlag = false;
-                        angular.forEach(dataTOUpldate, function(value1, key) {                                
-                            angular.forEach($scope.qMap, function(mapObj, attr) {		                                
-                                switch(attr){
-                                    case "questionId":
-                                        obj.questionId = value.answerId;
-                                        break;
-                                    case "question":  
-                                        obj.question = value.answerText;
-                                        break;
-                                    case "answerType":  
-                                        obj.answerType = value.answer_Type;
-                                        break;
-                                    case "answerOption":  
-                                        obj.answerOption = value.answerOptions;
-                                        break;
-                                    case "parentQId":  
-                                        obj.parentQId = value.questionId;
-                                        break;
-                                    case "givenAnswer":  
-                                        obj.givenAnswer = ""
-                                        break;
-
-                                }
-                            });                        
-                        });                             
-                    }
-                    // insert newly created follow up question after it's parent index in our temp array and bind to scope var
-                    dataTOUpldate.insert(index+1, obj);
-                    log(dataTOUpldate);
-                    $scope.questionsList = dataTOUpldate;
-                    $scope.$apply(); 
-                });
-                /*if(occuranceFlag){
-                    removeFollowUpQuestion();
-                }*/
-
+        var mainQueId = givenAnswerObject.questionId;       
+        mainQueID = mainQueId;        
+       
+        var selectedAnsList = {};
+        selectedAnsList.answers = {}
+        selectedAnsList.answers.answer = {};
+        selectedAnsList.answers.answer.ans_txt = answer;
+        selectedAnsList.answers.answer.que_Id = mainQueId;
+        selectedAnsList.answers.answer.user_id = "Test User";      
+        
+        ydbDatabase.insertBulkData(selectedAnsList.answers.answer, "answers", aMap , function (response) { 
+                log("insertBulkData - individual answer inserted in Index DB - ANSWER OBJ");
+                selectedAnsList = new Array(0);
             },
             function (error) {
                 log("error");
                 log(error);
             });
-        },
-        function (error) {
-            log("error");
-            log(error);
-        });        
+       
+        removeFollowUpQue();
+        
+        // check with qid and answer text to find follow up question ID in status Matrix        
+        angular.forEach(statusMatrix, function(key,value){
+              if(mainQueID === key.que_Id && answer === key.answer_text){
+                 var followUpQueId = key.followUp_qid;
+                 angular.forEach(allQuestions, function(key,value){
+                      if(key.questionId === followUpQueId){
+                          // Found the follow up question                         
+                          var objectToPush = key;
+                          var updateQueArr = new Array(0);
+                          updateQueArr = $scope.questionsList;
+                          angular.forEach(updateQueArr, function(key, index){
+                              if(key.questionId === mainQueID){
+                                    updateQueArr.insert(index+1, objectToPush);
+                                    log(updateQueArr);
+                                    $scope.questionsList = updateQueArr;                                   
+                              }
+                          });
+                      }
+                 });
+              }
+        });         
     }
 
     //START:  Non - public Function handlers
@@ -167,6 +146,26 @@ hmkApp.controller('surveyController1', ['ydbDatabase','constants', '$scope','$ht
                 $scope.$apply();
             }
         });
+    }
+     // Handler to Remove follow up question if main question answer changed.
+    var removeFollowUpQue = function(){
+        // Remove Follow up question if main question answer changed.
+        var alteredQuestionList = $scope.questionsList;
+        var idToRemove = new Array(0);
+        angular.forEach(statusMatrix, function(value, key) {                           
+            if(value.que_Id == mainQueID){
+                idToRemove.push(value.followUp_qid);
+            }
+        });
+        angular.forEach(idToRemove,function(key,value){
+            var qId = key;
+            angular.forEach(alteredQuestionList, function(key,index){
+                    if(key.questionId == qId){
+                        alteredQuestionList.splice(index, 1);
+                    }
+            });
+        });
+        $scope.questionsList = alteredQuestionList;       
     }
     var log = function(message){
         console.log(message);

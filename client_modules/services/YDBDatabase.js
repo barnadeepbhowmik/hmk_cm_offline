@@ -29,10 +29,11 @@ angular.module('hmk-database',['hmk-constants', 'hmk-schema']).service('ydbDatab
 		
 	}
 	
-	var insertBulkData = function(JSONdata,object_store,map){		
+	var insertBulkData = function(JSONdata,object_store,map, success_callback, failure_callback){		
 	    saveJSONToDB(JSONdata, map, object_store);
-		ydbStorage.put(object_store, dataToBeInserted).then(function(recordIDs){
+		ydbStorage.put(object_store, dataToBeInserted).then(function(response){
 			log("New data inserted....");	
+            success_callback(response);
             dataToBeInserted = new Array(0);
 		});		
 	}
@@ -113,21 +114,35 @@ angular.module('hmk-database',['hmk-constants', 'hmk-schema']).service('ydbDatab
 	//START:  Non - public Function handlers
 	
 	var saveJSONToDB = function (data, map, object_store){
-		log("insertBulkData - > saveJSONToDB handler");	       
-		angular.forEach(data, function(dataObj, i) {
-              var temp_data = {};			 
-              angular.forEach(map, function(mapObj, attr) {	
-				   Object.keys(dataObj).forEach(function(key){
-						var value = dataObj[key];
-						if(key === mapObj){
-							 temp_data[attr] = value;
-						}	
-						
-				   });
-			 });
-			 dataToBeInserted.push(temp_data);
-			 log(dataToBeInserted);
-		});
+		log("insertBulkData - > saveJSONToDB handler");       
+        if(data.length != undefined){
+            angular.forEach(data, function(dataObj, i) {
+                  var temp_data = {};			 
+                  angular.forEach(map, function(mapObj, attr) {	
+                       Object.keys(dataObj).forEach(function(key){
+                            var value = dataObj[key];
+                            if(key === mapObj){
+                                 temp_data[attr] = value;
+                            }	
+
+                       });
+                 });
+                 dataToBeInserted.push(temp_data);                 
+            });
+        }
+        else{
+             var temp_data = {};			 
+                  angular.forEach(map, function(mapObj, attr) {	
+                       Object.keys(data).forEach(function(key){
+                            var value = data[key];
+                            if(key === mapObj){
+                                 temp_data[attr] = value;
+                            }	
+
+                       });
+                 });
+                 dataToBeInserted.push(temp_data);               
+        }
 	}	
     
     var log = function(message){

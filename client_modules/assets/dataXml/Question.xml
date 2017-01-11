@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <questions>
+	
+        <question>
+            <questionId_c>a2cG0000000YK0xIAG</questionId_c>
+            <question_c>Have you done full body checkup?</question_c>
+            <answerType_c>Picklist</answerType_c>
+            <answerOptions_c>Yes, No</answerOptions_c>
+            <isFollowUpQue_c>false</isFollowUpQue_c>         
+        </question>
+        <question>
+            <questionId_c>a2cG0000000YK0yIAG</questionId_c>
+            <question_c>Are you suffering from any major disease?</question_c>
+            <answerType_c>Picklist</answerType_c>
+            <answerOptions_c>Hypo-tension, Hyper-tesnsion , Heart Disease, Diabetes</answerOptions_c>
+            <isFollowUpQue_c>false</isFollowUpQue_c> 
+         </question>
+        <question>
+            <questionId_c>a2cG0000000YK0zIAG</questionId_c>
+            <question_c>How many years are you suffering from this disease?</question_c>
+            <answerType_c>Text</answerType_c>
+            <answerOptions_c></answerOptions_c>
+            <isFollowUpQue_c>false</isFollowUpQue_c> 
+        </question>		
+		<question>
+            <questionId_c>a2cG0000000YK0aIAG</questionId_c>
+            <question_c>Which city have you done full body checkup?</question_c>
+            <answerType_c>Picklist</answerType_c>
+            <answerOptions_c>Pune, Banglore, Mumbai</answerOptions_c>
+            <isFollowUpQue_c>true</isFollowUpQue_c>          
+        </question>	
+		<question>
+            <questionId_c>a2cG0000000YK0bIAG</questionId_c>
+            <question_c>What is the reason for not doing full body checkup?</question_c>
+            <answerType_c>Picklist</answerType_c>
+            <answerOptions_c>busy, will be doing in next 1 month, did not find the right doctor</answerOptions_c>
+            <isFollowUpQue_c>true</isFollowUpQue_c>           
+        </question>
+		<question>
+            <questionId_c>a2cG0000000YK0fIAG</questionId_c>
+            <question_c>Any other major disease?</question_c>
+            <answerType_c>Text</answerType_c>
+            <answerOptions_c></answerOptions_c>
+            <isFollowUpQue_c>true</isFollowUpQue_c>            
+        </question>			
+		
+    </questions>

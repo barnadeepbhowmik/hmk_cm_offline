@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+    <statusMatrix>
+	
+        <matrix>
+            <que_Id>a2cG0000000YK0xIAG</que_Id>
+            <answer_text>Yes</answer_text>
+            <followUp_qid>a2cG0000000YK0aIAG</followUp_qid>
+        </matrix>
+		
+		 <matrix>
+            <que_Id>a2cG0000000YK0xIAG</que_Id>
+            <answer_text>No</answer_text>
+            <followUp_qid>a2cG0000000YK0bIAG</followUp_qid>
+        </matrix>
+		
+		 <matrix>
+            <que_Id>a2cG0000000YK0yIAG</que_Id>
+            <answer_text>Hypo-tension</answer_text>
+            <followUp_qid>a2cG0000000YK0fIAG</followUp_qid>
+        </matrix>
+		
+    </statusMatrix>
+	
+	
